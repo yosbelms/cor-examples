@@ -4,7 +4,7 @@
 
 > *[Cor - http://yosbelms.github.io/cor](http://yosbelms.github.io/cor)*
 
-## To install the examples
+## To install the example
 
 ```
 git clone https://github.com/yosbelms/cor-examples.git
@@ -13,7 +13,7 @@ npm install
 ```
 Then open it from a web-server.
 
-> You can install Cor CLI form NPM `npm install -g cor-lang` and use `cor http` command as a lightweight server.
+> You can install Cor CLI form NPM `npm install -g cor-lang` and use `cor http` command as a lightweight static server.
 
 ### Build
 
