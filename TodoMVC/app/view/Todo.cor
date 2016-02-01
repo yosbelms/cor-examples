@@ -1,0 +1,82 @@
+use 'underscore' underscore
+use 'backbone'   bbone
+
+class Todo : bbone.View {
+    
+    func init() {
+        me.tagName  = 'li'        
+        me.events   = &[
+            'click .toggle'   : 'toggleDone',
+            'dblclick .view'  : 'edit',
+            'click a.destroy' : 'clear',
+            'keypress .edit'  : 'updateOnEnter',
+            'blur .edit'      : 'close',
+        ]
+
+        super()
+        
+        me.listenTo(me.model, 'change',  me.render)
+        me.listenTo(me.model, 'destroy', me.remove)
+    }
+    
+    func render() {
+        me.$el.html(todoTemplate(me.model.toJSON()))
+        me.$el.toggleClass('completed', me.model.get('completed'))
+        me.input = me.$('.edit')
+        return me
+    }
+    
+    func toggleDone() {
+        me.model.toggle()
+    }
+    
+    func edit() {
+        me.$el.addClass('editing')
+        me.input.focus()
+    }
+    
+    func visible(v) {
+        if v {
+            me.$el.removeClass('hidden')
+        } else {
+            me.$el.addClass('hidden')
+        }
+    }
+    
+    func close() {
+        value = me.input.val()
+
+        if !value {
+            me.clear()
+        } else {
+            me.model.save(&[title: value])
+            me.$el.removeClass('editing')
+        }
+    }
+        
+    func updateOnEnter(e) {
+        if e.keyCode == 13 {
+            me.close()
+        }
+    }
+    
+    func remove() {        
+        todos = me.parent.children
+        todos.splice(todos.indexOf(me), 1)
+        return super()
+    }
+        
+    func clear() {        
+        me.model.destroy()
+    }
+}
+
+
+todoTemplate = underscore.template('
+    <div class="view">
+        <input class="toggle" type="checkbox" <%= completed ? \'checked="checked"\' : \'\' %> />
+        <label><%- title %></label>
+        <a class="destroy"></a>
+    </div>
+    <input class="edit" type="text" value="<%- title %>" />
+')

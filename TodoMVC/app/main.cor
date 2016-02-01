@@ -1,0 +1,24 @@
+//use 'todomvc'
+use 'backbone' bbone
+use './view/Main'
+
+class App : bbone.Router {
+
+    func init(main) {
+        me.mainView = main
+        me.routes   = &['*filter' : 'doFilter']
+               
+        super()
+    }
+    
+    func doFilter(filter) {
+        me.mainView.doFilter(filter)
+    }
+    
+}
+
+func init() {
+    main = &Main
+    app  = &App[main]
+    bbone.history.start()
+}

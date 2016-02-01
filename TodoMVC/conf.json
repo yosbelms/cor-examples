@@ -1,0 +1,9 @@
+{
+    "paths" : {
+        "todomvc"    : "node_modules/todomvc-common/base.js",
+        "jquery"     : "node_modules/jquery/dist/jquery.js",
+        "underscore" : "node_modules/underscore/underscore.js",
+        "backbone"   : "node_modules/backbone/backbone.js",
+        "storage"    : "node_modules/backbone.localStorage/backbone.localStorage.js"
+    }
+}

@@ -1,0 +1,25 @@
+use 'backbone' bbone
+use 'storage'  Storage
+use './Todo'
+
+class TodoList : bbone.Collection {
+
+    comparator   = 'order'
+    localStorage = &Storage['todos-backbone']
+    model        = Todo
+    
+    func completed() {
+        return me.where(&[completed: true])
+    }
+    
+    func remaining() {
+        return me.where(&[completed: false])
+    }
+    
+    func nextOrder() {
+        if !me.length {
+            return 1
+        }
+        return me.last().get('order') + 1;
+    }
+}

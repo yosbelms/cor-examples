@@ -1,0 +1,145 @@
+use '../model/TodoList'
+use './Todo'
+
+use 'underscore' underscore
+use 'backbone'   bbone
+
+
+class Main : bbone.View {
+        
+    func init() {        
+        me.el            = '#todoapp'
+        me.events        = &[
+            'keypress #new-todo'     : 'createOnEnter',
+            'click #clear-completed' : 'clearCompleted',
+            'click #toggle-all'      : 'toggleAllComplete',
+        ]
+
+        super()
+        
+        me.children      = []
+        me.currentFilter = ''
+        me.input         = me.$('#new-todo')
+        me.allCheckbox   = me.$('#toggle-all')[0]
+        
+        me.listenTo(todoList, 'add',    me.addOne)
+        me.listenTo(todoList, 'reset',  me.addAll)
+        me.listenTo(todoList, 'all',    me.render)
+        me.listenTo(todoList, 'remove', me.removeOne)
+        
+        me.footer = me.$('footer')
+        me.main   = me.$('#main')
+        
+        todoList.fetch()
+    }
+    
+    func render() {
+        completed = todoList.completed().length
+        remaining = todoList.remaining().length
+        
+        if todoList.length {
+            me.main.show()
+            me.footer.show()
+            me.footer.html(appTemplate(&[
+                completed : completed,
+                remaining : remaining,
+            ]))
+        } else {
+            me.main.hide()
+            me.footer.hide()
+        }
+        
+        me.allCheckbox.checked = !remaining
+    }    
+        
+    func addOne(todo) {
+        view        = &Todo[model: todo]
+        view.parent = me
+        me.children.push(view)
+        me.$('#todo-list').append(view.render().el)
+        me.applyFilter(view)
+    }
+    
+    func addAll() {
+        for todo in todoList {
+            me.addOne(todo)
+        }
+    }
+    
+    func createOnEnter(e) {
+        if e.keyCode != 13 { return }
+        if !me.input.val() { return }
+        
+        todoList.create(&[
+            title : me.input.val(),
+            order : todoList.nextOrder(),
+        ])
+        
+        me.input.val('')
+    }
+    
+    func clearCompleted() {
+        for todo in todoList.completed() {
+            todo.destroy()
+        }
+
+        return false
+    }    
+
+    func toggleAllComplete() {
+        compl = &['completed': me.allCheckbox.checked]
+        
+        for todo in todoList.models {
+            todo.save(compl)
+        }
+    }
+    
+    func doFilter(filter) {        
+        if ! filter.(String) {
+            filter = ''
+        }
+        
+        me.selectFilter(filter)
+
+        for todoView in me.children {
+            me.applyFilter(todoView)
+        }
+    }
+    
+    func applyFilter(todoView) {
+        switch me.currentFilter {            
+            case 'active'    : todoView.visible(! todoView.model.get('completed'))
+            case 'completed' : todoView.visible(todoView.model.get('completed'))
+            default          : todoView.visible(true)
+        }
+    }
+    
+    func selectFilter(filterName) {
+        me.currentFilter = filterName
+        
+        fs = me.$('#filters li a')
+        fs.removeClass('selected')
+        f  = fs.filter('[href="#/' + filterName + '"]')
+        f.addClass('selected')
+    }
+    
+}
+
+todoList    = &TodoList
+appTemplate = underscore.template('
+    <span id="todo-count"><strong><%= remaining %></strong> <%= remaining == 1 ? \'item\' : \'items\' %> left</span>
+    <ul id="filters">
+        <li>
+            <a class="selected" href="#/">All</a>
+        </li>
+        <li>
+            <a href="#/active">Active</a>
+        </li>
+        <li>
+            <a href="#/completed">Completed</a>
+        </li>
+    </ul>
+    <% if ( completed ) { %>
+        <button id="clear-completed">Clear completed</button>
+    <% } %>
+')

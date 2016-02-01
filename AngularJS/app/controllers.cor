@@ -1,0 +1,27 @@
+
+// Customers controller
+func Customers($scope) {
+    
+    // A list where customers are stored
+    $scope.customers = [
+        &[name: 'Peter', age: 30],
+        &[name: 'John',  age: 50],
+    ]
+    
+    // Add new customer
+    $scope.addCustomer = func() {
+        $scope.customers.push(&[
+            // get the customer name from the textbox
+            name: $scope.newCustomer.name,
+        ])
+        
+        // clear the textbox
+        $scope.newCustomer.name = ''
+    }
+    
+    // remove existing customer
+    $scope.removeCustomer = func(cust) {
+        $scope.customers.splice($scope.customers.indexOf(cust), 1)
+    }
+    
+}
