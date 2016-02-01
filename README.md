@@ -1,6 +1,6 @@
 # Cor Examples
 
-Exmaples written in [Cor] language (http://yosbelms.github.io/cor)
+Exmaples written in [Cor](http://yosbelms.github.io/cor) language 
 
 * The classic [TodoMVC with Backbone.js](https://github.com/yosbelms/cor-examples/tree/master/AngularJS)
 * A simple [Angular.js showcase](https://github.com/yosbelms/cor-examples/tree/master/TodoMVC)
