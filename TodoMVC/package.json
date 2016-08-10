@@ -1,7 +1,7 @@
 {
-    "private": true,
+    "private": false,
     "dependencies": {
-        "cor-lang": "^0.4.0",
+        "cor-lang": "^0.10.8",
         "underscore": "^1.8.3",
         "backbone": "^1.2.3",
         "backbone.localstorage": "^1.1.16",
