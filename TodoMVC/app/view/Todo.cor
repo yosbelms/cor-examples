@@ -5,13 +5,13 @@ class Todo : bbone.View {
     
     func init() {
         me.tagName  = 'li'        
-        me.events   = &[
+        me.events   = (
             'click .toggle'   : 'toggleDone',
             'dblclick .view'  : 'edit',
             'click a.destroy' : 'clear',
             'keypress .edit'  : 'updateOnEnter',
             'blur .edit'      : 'close',
-        ]
+        )
 
         super()
         
@@ -26,9 +26,7 @@ class Todo : bbone.View {
         return me
     }
     
-    func toggleDone() {
-        me.model.toggle()
-    }
+    func toggleDone() me.model.toggle()
     
     func edit() {
         me.$el.addClass('editing')
@@ -46,11 +44,11 @@ class Todo : bbone.View {
     func close() {
         value = me.input.val()
 
-        if !value {
-            me.clear()
-        } else {
-            me.model.save(&[title: value])
+        if value? {
+            me.model.save((title: value))
             me.$el.removeClass('editing')
+        } else {
+            me.clear()
         }
     }
         
@@ -66,7 +64,7 @@ class Todo : bbone.View {
         return super()
     }
         
-    func clear() {        
+    func clear() {
         me.model.destroy()
     }
 }

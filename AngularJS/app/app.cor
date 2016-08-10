@@ -4,7 +4,7 @@ use 'controllers'
 func init() {
     
     // create new ng module
-    app = angular.module('app', ['ngRoute'])    
+    app = angular.module('app', ('ngRoute',))
     
     // add the controllers
     // see `use` statement in the top of the module
@@ -14,19 +14,19 @@ func init() {
     app.config(func($routeProvider) {
         rp = $routeProvider
         
-        rp.when('/', &[
+        rp.when('/', (
             templateUrl : 'app/customers.html',
             controller  : 'Customers',
-        ])
+        ))
         
-        rp.otherwise(&[
+        rp.otherwise((
 		    redirectTo  : '/',
-	    ])
+	    ))
     })
     
     // boostrap angular    
     // Cor executes after DOM is ready
     // but Angular doesn't wait, so we replace
     // `ng-app` directive to manually boostrap ng
-    angular.bootstrap(document, ['app'])
+    angular.bootstrap(document, ('app',))
 }

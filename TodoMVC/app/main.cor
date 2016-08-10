@@ -6,19 +6,16 @@ class App : bbone.Router {
 
     func init(main) {
         me.mainView = main
-        me.routes   = &['*filter' : 'doFilter']
+        me.routes   = (':filter' : 'doFilter')
                
         super()
     }
     
-    func doFilter(filter) {
-        me.mainView.doFilter(filter)
-    }
-    
+    func doFilter(filter) me.mainView.doFilter(filter)
 }
 
 func init() {
     main = &Main
-    app  = &App[main]
+    app  = &App(main)
     bbone.history.start()
 }

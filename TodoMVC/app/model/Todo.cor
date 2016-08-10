@@ -2,12 +2,10 @@ use 'backbone' bbone
 
 class Todo : bbone.Model {
 
-    func defaults() {
-        return &[
-            title : 'empty todo...',
-            completed  : false,
-        ]
-    }
+    func defaults() (
+        title : 'empty todo...',
+        completed  : false,
+    )
     
     func toggle() {
         me.set('completed', !me.get('completed'))

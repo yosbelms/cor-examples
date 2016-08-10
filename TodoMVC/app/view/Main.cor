@@ -9,23 +9,22 @@ class Main : bbone.View {
         
     func init() {        
         me.el            = '#todoapp'
-        me.events        = &[
+        me.events        = (
             'keypress #new-todo'     : 'createOnEnter',
             'click #clear-completed' : 'clearCompleted',
             'click #toggle-all'      : 'toggleAllComplete',
-        ]
+        )
 
         super()
         
-        me.children      = []
-        me.currentFilter = ''
+        me.children      = (,)
+        me.currentFilter = 'all'
         me.input         = me.$('#new-todo')
         me.allCheckbox   = me.$('#toggle-all')[0]
         
         me.listenTo(todoList, 'add',    me.addOne)
         me.listenTo(todoList, 'reset',  me.addAll)
         me.listenTo(todoList, 'all',    me.render)
-        me.listenTo(todoList, 'remove', me.removeOne)
         
         me.footer = me.$('footer')
         me.main   = me.$('#main')
@@ -40,10 +39,10 @@ class Main : bbone.View {
         if todoList.length {
             me.main.show()
             me.footer.show()
-            me.footer.html(appTemplate(&[
+            me.footer.html(appTemplate((
                 completed : completed,
                 remaining : remaining,
-            ]))
+            )))
         } else {
             me.main.hide()
             me.footer.hide()
@@ -53,7 +52,7 @@ class Main : bbone.View {
     }    
         
     func addOne(todo) {
-        view        = &Todo[model: todo]
+        view        = &Todo(model: todo)
         view.parent = me
         me.children.push(view)
         me.$('#todo-list').append(view.render().el)
@@ -70,10 +69,10 @@ class Main : bbone.View {
         if e.keyCode != 13 { return }
         if !me.input.val() { return }
         
-        todoList.create(&[
+        todoList.create((
             title : me.input.val(),
             order : todoList.nextOrder(),
-        ])
+        ))
         
         me.input.val('')
     }
@@ -82,12 +81,12 @@ class Main : bbone.View {
         for todo in todoList.completed() {
             todo.destroy()
         }
-
+        window.location = '#/all'
         return false
     }    
 
     func toggleAllComplete() {
-        compl = &['completed': me.allCheckbox.checked]
+        compl = ('completed': me.allCheckbox.checked)
         
         for todo in todoList.models {
             todo.save(compl)
@@ -130,7 +129,7 @@ appTemplate = underscore.template('
     <span id="todo-count"><strong><%= remaining %></strong> <%= remaining == 1 ? \'item\' : \'items\' %> left</span>
     <ul id="filters">
         <li>
-            <a class="selected" href="#/">All</a>
+            <a class="selected" href="#/all">All</a>
         </li>
         <li>
             <a href="#/active">Active</a>

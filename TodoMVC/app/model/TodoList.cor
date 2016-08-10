@@ -5,16 +5,11 @@ use './Todo'
 class TodoList : bbone.Collection {
 
     comparator   = 'order'
-    localStorage = &Storage['todos-backbone']
+    localStorage = &Storage('todos-backbone')
     model        = Todo
     
-    func completed() {
-        return me.where(&[completed: true])
-    }
-    
-    func remaining() {
-        return me.where(&[completed: false])
-    }
+    func completed() me.where((completed: true))
+    func remaining() me.where((completed: false))
     
     func nextOrder() {
         if !me.length {
